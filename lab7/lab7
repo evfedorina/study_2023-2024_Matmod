@@ -1,0 +1,60 @@
+ using Plots
+ using DifferentialEquations
+
+ const n0 = 7
+ const N = 650
+
+ const T_0 = (0, 10)
+
+ u0 = [n0]
+
+ # 1 случай - a1 >> a2
+
+ function F0(du, u, p, t)
+    du[1] = (0.44 + 0.0021*u[1])*(N - u[1])
+ end
+
+ P0 = ODEProblem(F0, u0, T_0)
+
+ solution0 = solve(P0, Tsit5(), dtmax=0.1)
+
+ plot0 = plot(solution0, color=:green, title="1 случай", xlabel="t", ylabel="N(t)")
+savefig(plot0, "j1.png")
+
+ # 2 случай - a1 << a2
+
+ const T_1 = (0, 0.1)
+
+ function F1(du, u, p, t)
+    du[1] = (0.00009 + 0.44*u[1])*(N - u[1])
+ end
+
+ P1 = ODEProblem(F1, u0, T_1)
+
+ solution1 = solve(P1, Tsit5(), dtmax=0.001)
+
+v = [solution1(i, Val{1}) for i in 0:0.001:0.1]
+maxim_t = findfirst(x -> x==maximum(v), v)
+
+print(maximum(v))
+print(maxim)
+
+
+ plot1 = plot(solution1, color=:green, title="2 случай", xlabel="t", ylabel="N(t)")
+savefig(plot1, "j2.png")
+
+ # 3 случай - с функциями
+
+ const T_1 = (0, 0.1)
+
+ function F2(du, u, p, t)
+    du[1] = (0.77*t + 0.5*cos(t)*u[1])*(N - u[1])
+ end
+
+ P2 = ODEProblem(F2, u0, T_1)
+
+ solution2 = solve(P2, Tsit5(), dtmax=0.001)
+
+ plot2 = plot(solution2, color=:green, title="3 случай", xlabel="t", ylabel="N(t)")
+savefig(plot2, "j3.png")
+
